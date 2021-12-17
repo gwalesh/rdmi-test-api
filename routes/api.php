@@ -14,11 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/users','App\Http\Controllers\Api\V1\RegisterController@getUsers');
-Route::post('/user-register' , 'App\Http\Controllers\Api\V1\RegisterController@register');
-Route::post('/add-user-image/{id}', 'App\Http\Controllers\Api\V1\RegisterController@uploadImage');
-Route::delete('/user-delete/{id}' , 'App\Http\Controllers\Api\V1\RegisterController@deleteUser');
-
+Route::group(['namespace' => 'App\Http\Controllers\Api\V1',], function () {
+    Route::get('/users','RegisterController@getUsers');
+    Route::post('/user-register' , 'RegisterController@register');
+    Route::post('/add-user-image/{id}', 'RegisterController@uploadImage');
+    Route::delete('/user-delete/{id}' , 'RegisterController@deleteUser');
+});
 
 
 
