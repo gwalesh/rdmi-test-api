@@ -32,14 +32,17 @@ class RegisterController extends Controller
             'password' => Hash::make($request['password']),
         ]);
 
-        return response()->json();
+        return response()->json([
+            'status' => true,
+            'message' => "Registartion Succesfull",
+        ]);
     }
 
     public function uploadImage(Request  $request, $id)
     {
         $request->validate([
-            ['name' => 'string' , 'nullable', 'max:250'],
-            ['profile' => 'string' , 'nullable', 'max:250'],
+            ['name' => 'string' , 'required', 'max:250'],
+            ['profile' => 'string' , 'required', 'max:250'],
         ]);
 
 
@@ -74,7 +77,10 @@ class RegisterController extends Controller
             'profile' => $fileNameToStore,
         ]);
 
-        return response()->json();
+        return response()->json([
+            'status' => true,
+            'message' => "Name and Image Uploaded Sucessfully",
+        ]);
     }
 
     public function deleteUser($id)
@@ -82,6 +88,11 @@ class RegisterController extends Controller
         $user = User::find($id);
 
         $user->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => "User Deleted Succesfully",
+        ]);
     }
 
     public function showToken()
