@@ -66,7 +66,7 @@ class RegisterController extends Controller
             $thumb->save('storage/profiles/'.$thumbStore);
 		
         } else {
-            $fileNameToStore = 'noimage.jpg';
+            $fileNameToStore = 'noimage.png';
         }
 
 
