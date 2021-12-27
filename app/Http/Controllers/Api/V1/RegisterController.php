@@ -42,7 +42,7 @@ class RegisterController extends Controller
     {
         $request->validate([
             ['name' => 'string' , 'required', 'max:250'],
-            ['profile' => 'string' , 'required', 'max:250'],
+            ['profile' => 'string' , 'nullable', 'max:250'],
         ]);
 
 
