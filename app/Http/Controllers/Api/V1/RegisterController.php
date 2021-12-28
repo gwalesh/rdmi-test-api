@@ -52,7 +52,7 @@ class RegisterController extends Controller
     public function uploadImage(Request  $request, $id)
     {
         $request->validate([
-            ['name' => 'string' , 'required', 'max:250'],
+            ['name' => 'string' , 'nullable', 'max:250'],
             ['profile' => 'string' , 'nullable', 'max:250'],
         ]);
 
