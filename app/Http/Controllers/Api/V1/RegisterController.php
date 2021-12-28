@@ -10,6 +10,8 @@ use App\http\Requests\StoreImageUploadRequest;
 use App\Http\Resources\RegisterResource;
 use Illuminate\Support\Facades\Hash;
 
+use Exception;
+
 class RegisterController extends Controller
 {
 
@@ -26,11 +28,20 @@ class RegisterController extends Controller
             'password'  => ['string', 'min:8', 'required', 'confirmed'],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request['password']),
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request['password']),
+            ]);
+        }
+        catch(Exception $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $e,
+                ]);
+        }
+                        
 
         return response()->json([
             'status' => true,
