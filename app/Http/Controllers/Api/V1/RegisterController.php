@@ -9,6 +9,7 @@ use App\http\Requests\StoreRegisterRequest;
 use App\http\Requests\StoreImageUploadRequest;
 use App\Http\Resources\RegisterResource;
 use Illuminate\Support\Facades\Hash;
+use DB;
 
 use Exception;
 
@@ -39,6 +40,7 @@ class RegisterController extends Controller
                 'status' => true,
                 'id' => $user->id,
                 'message' => "Registartion Succesfull",
+                'token' => $user->createToken('tokens')->plainTextToken
             ]);
         }
         catch(Exception $e) {
@@ -114,8 +116,84 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function showToken()
+    public function selectCourse(Request $request, $id)
     {
-        echo csrf_token();
+        $request->validate([
+            ['exam' => 'string' , 'nullable', 'max:250'],
+            ['standard' => 'string' , 'nullable', 'max:250'],
+            ['course' => 'string' , 'nullable', 'max:250'],
+        ]);
+
+        $user = User::find($id);
+
+            try{
+                $user->update([
+                    'exam' => $request->name,
+                    'standard' => $request->standard,
+                    'course' => $request->course,
+                ]);
+            }
+            catch(Exception $e) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $e,
+                ]);
+            }
+
+        return response()->json([
+            'status' => true,
+            'message' => "Preferences Set Succesfully !",
+        ]);
+    }
+
+    public function formView()
+    {
+        return view('user-image');
+    }
+    public function formsubmit(Request $request, $id)
+    {
+        $request->validate([
+            'name' => ['string',  'nullable', 'max:255'],
+            'profile' => ['string', 'nullable', 'max:255'],
+        ]);
+
+        try {
+            // Handle File Upload
+            if($request->hasFile('profile')){
+                // Get filename with the extension
+                $filenameWithExt = $request->file('profile')->getClientOriginalName();
+                // Get just filename
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                // Get just ext
+                $extension = $request->file('profile')->getClientOriginalExtension();
+                // Filename to store
+                $fileNameToStore= $filename.'_'.time().'.'.$extension;
+                // Upload Image
+                $path = $request->file('profile')->storeAs('public/profiles', $fileNameToStore);
+            
+            // make thumbnails
+            $thumbStore = 'thumb.'.$filename.'_'.time().'.'.$extension;
+                $thumb = Image::make($request->file('profile')->getRealPath());
+                $thumb->resize(80, 80);
+                $thumb->save('storage/profiles/'.$thumbStore);
+            
+            } else {
+                $fileNameToStore = 'noimage.png';
+            }
+
+
+            $user = User::find($id);
+
+            $user->update([
+                'name'  =>  $request->name,
+                'proifle' => $fileNameToStore,
+            ]);
+
+            return back()->with('success' , 'Image Uploaded Succesfully');
+        }
+        catch(Exception $e) {
+            return back()->with('error','Image Not Uploaded');
+        
+        }
     }
 }

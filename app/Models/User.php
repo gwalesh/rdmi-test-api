@@ -19,6 +19,22 @@ class User extends Authenticatable
     //     'profile',
     // ];
 
+    public const  STANDARD_SELECT = [
+        '1' => "11th",
+        '2' => "12th",
+    ];
+
+    public const COURSE_SELECT = [
+        '1' => "NEET",
+        '2' => "JEE",
+    ];
+
+    public const EXAM_SELECT = [
+        '1' => "2022",
+        '2' => "2023",
+        '3' => "2024",
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -29,6 +45,9 @@ class User extends Authenticatable
         'email',
         'password',
         'profile',
+        'standard',
+        'course',
+        'exam',
     ];
 
     /**
@@ -49,22 +68,5 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    // public function registerMediaConversions(Media $media = null): void
-    // {
-    //     $this->addMediaConversion('thumb')->fit('crop', 50, 50);
-    //     $this->addMediaConversion('preview')->fit('crop', 120, 120);
-    // }
-
-    // public function getProfileAttribute()
-    // {
-    //     $file = $this->getMedia('profile')->last();
-    //     if ($file) {
-    //         $file->url       = $file->getUrl();
-    //         $file->thumbnail = $file->getUrl('thumb');
-    //         $file->preview   = $file->getUrl('preview');
-    //     }
-
-    //     return $file;
-    // }
+    
 }

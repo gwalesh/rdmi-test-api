@@ -25,6 +25,9 @@ Route::post('/tokens/create', function (Request $request) {
     return ['token' => $token->plainTextToken];
 });
 
+Route::get('/form-view','App\Http\Controllers\Api\V1\RegisterController@formView')->name('form.view');
+Route::post('/form-submit/{id}','App\Http\Controllers\Api\V1\RegisterController@formSubmit')->name('form.submit');
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
