@@ -60,7 +60,7 @@ class RegisterController extends Controller
 
             $user = User::find($id);
 
-            $$user->update($request->all());
+            $user->update($request->all());
 
             if ($request->input('profile', false)) {
                 if (!$user->profile || $request->input('profile') !== $user->profile->file_name) {
