@@ -108,7 +108,7 @@ class RegisterController extends Controller
 
             try{
                 $user->update([
-                    'exam' => $request->name,
+                    'exam' => $request->exam,
                     'standard' => $request->standard,
                     'course' => $request->course,
                 ]);
