@@ -144,15 +144,11 @@ class RegisterController extends Controller
 
             $user->update($request->all());
 
-            if ($request->input('profile', false)) {
-                if (!$user->profile || $request->input('profile') !== $user->profile->file_name) {
-                    if ($user->profile) {
-                        $user->profile->delete();
-                    }
-                    $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('profile'))))->toMediaCollection('profile');
+            if ($user) {
+                if ($request->hasFile('profile')) {
+                    $user->clearMediaCollection('profiles');
+                    $user->addMediaFromRequest('profile')->toMediaCollection('profiles');
                 }
-            } elseif ($user->profile) {
-                $user->profile->delete();
             }
 
             return back()->with('success' , 'Image Uploaded Succesfully');
