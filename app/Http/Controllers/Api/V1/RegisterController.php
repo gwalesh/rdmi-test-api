@@ -6,15 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\http\Requests\StoreRegisterRequest;
-use App\http\Requests\StoreImageUploadRequest;
+use App\http\Requests\StoreImageRequest;
 use App\Http\Resources\RegisterResource;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Traits\MediaUploadingTrait;
 use DB;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 use Exception;
 
 class RegisterController extends Controller
 {
+    use MediaUploadingTrait;
 
     public function getUsers()
     {
@@ -51,58 +54,39 @@ class RegisterController extends Controller
         }        
     }
 
-    public function uploadImage(Request  $request, $id)
+    public function uploadImage(StoreImageRequest  $request, $id)
     {
-        $request->validate([
-            ['name' => 'string' , 'nullable', 'max:250'],
-            ['profile' => 'string' , 'nullable', 'max:250'],
-        ]);
-
         try {
-            // Handle File Upload
-            if($request->hasFile('profile')){
-                // Get filename with the extension
-                $filenameWithExt = $request->file('profile')->getClientOriginalName();
-                // Get just filename
-                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-                // Get just ext
-                $extension = $request->file('profile')->getClientOriginalExtension();
-                // Filename to store
-                $fileNameToStore= $filename.'_'.time().'.'.$extension;
-                // Upload Image
-                $path = $request->file('profile')->storeAs('public/profiles', $fileNameToStore);
-            
-            // make thumbnails
-            $thumbStore = 'thumb.'.$filename.'_'.time().'.'.$extension;
-                $thumb = Image::make($request->file('profile')->getRealPath());
-                $thumb->resize(80, 80);
-                $thumb->save('storage/profiles/'.$thumbStore);
-            
-            } else {
-                $fileNameToStore = 'noimage.png';
-            }
-
 
             $user = User::find($id);
 
-            $user->update([
-                'name' => $request->name,
-                'profile' => $fileNameToStore,
-            ]);
+            $$user->update($request->all());
+
+            if ($request->input('profile', false)) {
+                if (!$user->profile || $request->input('profile') !== $user->profile->file_name) {
+                    if ($user->profile) {
+                        $user->profile->delete();
+                    }
+                    $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('profile'))))->toMediaCollection('profile');
+                }
+            } elseif ($user->profile) {
+                $user->profile->delete();
+            }
 
             return response()->json([
-                'status' => true,
-                'message' => "Name and Image Uploaded Sucessfully",
+                'status'    =>      true,
+                'message'   =>      "Image Uploaded Succesfully",
             ]);
         }
         catch(Exception $e) {
             return response()->json([
-                'status' => false,
+                'status'  => false,
                 'message' => $e,
             ]);
+        
+        }
     }
         
-    }
 
     public function deleteUser($id)
     {
@@ -150,49 +134,31 @@ class RegisterController extends Controller
     {
         return view('user-image');
     }
-    public function formsubmit(Request $request, $id)
+    public function formsubmit(StoreImageRequest $request, $id)
     {
-        $request->validate([
-            'name' => ['string',  'nullable', 'max:255'],
-            'profile' => ['string', 'nullable', 'max:255'],
-        ]);
 
         try {
             // Handle File Upload
-            if($request->hasFile('profile')){
-                // Get filename with the extension
-                $filenameWithExt = $request->file('profile')->getClientOriginalName();
-                // Get just filename
-                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-                // Get just ext
-                $extension = $request->file('profile')->getClientOriginalExtension();
-                // Filename to store
-                $fileNameToStore= $filename.'_'.time().'.'.$extension;
-                // Upload Image
-                $path = $request->file('profile')->storeAs('public/profiles', $fileNameToStore);
-            
-            // make thumbnails
-            $thumbStore = 'thumb.'.$filename.'_'.time().'.'.$extension;
-                $thumb = Image::make($request->file('profile')->getRealPath());
-                $thumb->resize(80, 80);
-                $thumb->save('storage/profiles/'.$thumbStore);
-            
-            } else {
-                $fileNameToStore = 'noimage.png';
-            }
-
 
             $user = User::find($id);
 
-            $user->update([
-                'name'  =>  $request->name,
-                'proifle' => $fileNameToStore,
-            ]);
+            $user->update($request->all());
+
+            if ($request->input('profile', false)) {
+                if (!$user->profile || $request->input('profile') !== $user->profile->file_name) {
+                    if ($user->profile) {
+                        $user->profile->delete();
+                    }
+                    $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('profile'))))->toMediaCollection('profile');
+                }
+            } elseif ($user->profile) {
+                $user->profile->delete();
+            }
 
             return back()->with('success' , 'Image Uploaded Succesfully');
         }
         catch(Exception $e) {
-            return back()->with('error','Image Not Uploaded');
+            return back()->with('error', $e);
         
         }
     }

@@ -13,7 +13,7 @@
         @if(session()->has('error'))
             <h1>{{ session()->get('error') }}</h1>
         @endif
-            <form method="POST" action="{{ route('form.submit' , '4') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('form.submit' , '1') }}" enctype="multipart/form-data">
                 @csrf 
 
                 <input type="text" name="name" placeholder="Enter your Full Name">

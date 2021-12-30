@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e7e24dc92a99cffbf862d5945e25ffd",
+    "content-hash": "3550fee1516ee1395529139a7b2ac38c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3312,16 +3312,16 @@
         },
         {
             "name": "spatie/laravel-medialibrary",
-            "version": "9.10.2",
+            "version": "9.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-medialibrary.git",
-                "reference": "bc03542bdc7cc7e5f37d0f9a345bf0631f103fc3"
+                "reference": "cdd43963635680bbfceae933882eabf2757470c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/bc03542bdc7cc7e5f37d0f9a345bf0631f103fc3",
-                "reference": "bc03542bdc7cc7e5f37d0f9a345bf0631f103fc3",
+                "url": "https://api.github.com/repos/spatie/laravel-medialibrary/zipball/cdd43963635680bbfceae933882eabf2757470c5",
+                "reference": "cdd43963635680bbfceae933882eabf2757470c5",
                 "shasum": ""
             },
             "require": {
@@ -3403,7 +3403,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-medialibrary/issues",
-                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.10.2"
+                "source": "https://github.com/spatie/laravel-medialibrary/tree/9.11.1"
             },
             "funding": [
                 {
@@ -3415,7 +3415,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-12-14T16:27:49+00:00"
+            "time": "2021-12-17T13:52:45+00:00"
         },
         {
             "name": "spatie/temporary-directory",
@@ -8514,5 +8514,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
