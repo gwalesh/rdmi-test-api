@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Response;
 
 class LoginController extends Controller
 {
@@ -22,9 +23,10 @@ class LoginController extends Controller
 
         // Check password
         if(!$user || !Hash::check($fields['password'], $user->password)) {
-            return response([
-                'message' => 'Bad creds'
-            ], 401);
+            return response()->json([
+                'status' => 401,
+                'message' => "Credentials Do not Match",
+            ]);
         }
 
         $token = $user->createToken('myapptoken')->plainTextToken;
@@ -34,7 +36,10 @@ class LoginController extends Controller
             'token' => $token
         ];
 
-        return response($response, 201);
+        return response()->json([
+            'status' => True,
+            'message' => $response,
+        ]);
     }
 
     public function checkUser()
